@@ -1,0 +1,120 @@
+﻿@{
+    ViewData["Title"] = "To Do List";
+}
+
+@section Styles {
+    <style>
+        .todo-list h2 {
+            font-family: arial;
+        }
+
+        .todo-list form {
+            display: inline-block;
+        }
+
+        .todo-list .list {
+            font-family: "Trebuchet MS";
+            font-size: 20px;
+            color: #000000;
+            cursor: pointer;
+            margin: 10px 0 10px 0;
+        }
+
+            .todo-list .list .item.completed {
+                color: #cc0000;
+                cursor: default;
+            }
+    </style>
+}
+
+<div class="todo-list">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <h2>To Do List</h2>
+            <form name="checkListForm">
+                <input type="text" id="checkListItem" name="checkListItem" class="form-control" placeholder="Add Item..." />
+            </form>
+            <button type="button" id="add" class="btn btn-info">Add</button>
+            <div class="list"></div>
+            <button type="button" id="clear" class="btn btn-default">Clear Completed</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.getJSON('/api/todoItems')
+                .done(function (data) {
+                    $.each(data, function (key, item) {
+                        if (item.isComplete) {
+                            $('.list').append('<div class="item completed" data-id=' + item.id + ' data-isComplete=' + item.isComplete + '><strike class="done">' + item.name + '</strike> <span class="glyphicon glyphicon-remove done" aria-hidden="true"></span></div>');
+                        } else {
+                            $('.list').append('<div class="item" data-id=' + item.id + ' data-isComplete=' + item.isComplete + '>' + item.name + '</div>');
+                        }
+                    });
+                }).fail(function (xhr, status, error) {
+                    alert('Unexpected Error. Status: ' + xhr.status + '. Response Text:' + xhr.responseText + '.');
+                });;
+
+            $('#add').click(function () {
+                var name = $("#checkListItem").val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "/api/todoItems",
+                    data: JSON.stringify({ name: name }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json"
+                }).done(function (data) {
+                    $('.list').append('<div class="item" data-id=' + data.id + ' data-isComplete=' + data.isComplete + '>' + data.name + '</div>');
+                    $('input').val('');
+                }).fail(function (xhr, status, error) {
+                    alert('Unexpected Error. Status: ' + xhr.status + '. Response Text:' + xhr.responseText + '.');
+                });
+            });
+
+            $(document).on('click', '.item', function () {
+                var $this = $(this);
+
+                if ($this.attr("data-isComplete") === 'false') {
+                    var id = $this.attr("data-id");
+
+                    $.ajax({
+                        type: "PUT",
+                        url: "/api/todoItems/" + id,
+                        data: JSON.stringify({ id: id, name: $this.text(), isComplete: true }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json"
+                    }).done(function (data) {
+                        $this.addClass("completed");
+                        $this.wrapInner('<strike class="done"></strike>');
+                        $this.append(' <span class="glyphicon glyphicon-remove done" aria-hidden="true"></span>');
+                        $this.attr("data-isComplete", "true");
+                    }).fail(function (xhr, status, error) {
+                        alert('Unexpected Error. Status: ' + xhr.status + '. Response Text:' + xhr.responseText + '.');
+                    });
+                }
+            });
+
+            $('#clear').click(function () {
+                $.ajax({
+                    type: "DELETE",
+                    url: "/api/todoItems/completed",
+                    dataType: "json"
+                }).done(function (data) {
+                    $('.done').remove();
+                }).fail(function (xhr, status, error) {
+                    alert('Unexpected Error. Status: ' + xhr.status + '. Response Text:' + xhr.responseText + '.');
+                });
+            });
+
+            $("#checkListItem").keydown(function (event) {
+                if (event.which === 13) {
+                    event.preventDefault();
+                    $("#add").click();
+                }
+            });
+        });
+    </script>
+}
