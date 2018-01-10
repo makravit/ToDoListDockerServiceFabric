@@ -32,7 +32,7 @@ namespace ToDoList.Api
             });
 
             services.AddDbContext<ToDoListContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("ToDoListContext"),
+                options.UseSqlServer(Configuration["ConnectionString"],
                 sqlOptions => sqlOptions.EnableRetryOnFailure())
             );
         }

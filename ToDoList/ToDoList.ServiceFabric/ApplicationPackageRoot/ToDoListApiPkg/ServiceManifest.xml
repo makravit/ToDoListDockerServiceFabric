@@ -15,12 +15,13 @@
     <EntryPoint>
       <!-- Follow this link for more information about deploying Windows containers to Service Fabric: https://aka.ms/sfguestcontainers -->
       <ContainerHost>
-        <ImageName>netbairesregistry.azurecr.io/todolistapi</ImageName>
+        <ImageName>glsfdemo.azurecr.io/todolistapi</ImageName>
       </ContainerHost>
     </EntryPoint>
     <!-- Pass environment variables to your container: -->
     <EnvironmentVariables>
       <EnvironmentVariable Name="ASPNETCORE_ENVIRONMENT" Value="Production"/>
+      <EnvironmentVariable Name="ConnectionString" Value=""/>
     </EnvironmentVariables>
   </CodePackage>
 
