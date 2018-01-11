@@ -1,4 +1,4 @@
-FROM microsoft/aspnetcore-build:2.0-nanoserver-1709 AS build-env
+FROM microsoft/aspnetcore-build:2.0 AS build-env
 WORKDIR /app
 
 # copy csproj and restore as distinct layers
@@ -10,7 +10,7 @@ COPY . ./
 RUN dotnet publish -c Release -o out
 
 # build runtime image
-FROM microsoft/aspnetcore:2.0-nanoserver-1709
+FROM microsoft/aspnetcore:2.0
 WORKDIR /app
 EXPOSE 80
 COPY --from=build-env /app/out .
