@@ -16,7 +16,7 @@
     <ConfigOverrides />
     <Policies>
       <ContainerHostPolicies CodePackageRef="Code">
-        <RepositoryCredentials AccountName="glsfdemo" Password="+v6UxwO/63jNuwa+eCXxh9+E58Er2bqL" PasswordEncrypted="false"/>
+        <RepositoryCredentials AccountName="glsfdemo" Password="" PasswordEncrypted="false"/>
         <PortBinding ContainerPort="80" EndpointRef="ToDoListWebTypeEndpoint"/>
       </ContainerHostPolicies>
     </Policies>
@@ -26,7 +26,7 @@
     <ConfigOverrides />
     <Policies>
       <ContainerHostPolicies CodePackageRef="Code">
-        <RepositoryCredentials AccountName="glsfdemo" Password="+v6UxwO/63jNuwa+eCXxh9+E58Er2bqL" PasswordEncrypted="false"/>
+        <RepositoryCredentials AccountName="glsfdemo" Password="" PasswordEncrypted="false"/>
         <PortBinding ContainerPort="80" EndpointRef="ToDoListApiTypeEndpoint"/>
       </ContainerHostPolicies>
     </Policies>
